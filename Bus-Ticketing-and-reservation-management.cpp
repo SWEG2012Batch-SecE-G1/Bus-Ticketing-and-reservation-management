@@ -2,8 +2,6 @@
 #include <iomanip>
 using namespace std;
 
-
-
 int main(){
     int Cchoice;
     char answer,y, n;
