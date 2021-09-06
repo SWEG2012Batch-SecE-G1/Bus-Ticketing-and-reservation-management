@@ -1,0 +1,279 @@
+#include <iostream>
+#include <string.h>
+#include <iomanip>
+#include <stdlib.h>
+using namespace std;
+
+struct busInfo{
+	string busType, driverName, color, departureTime, From, To;
+};
+struct Date{
+	int day, month, year;
+	string time;
+};
+
+struct Address{
+	string city;
+	int streetNum;
+};
+struct Traveler {
+    busInfo myBus;
+    char name[30];
+    int age;
+    Address TA;
+    int phoneNum, seatNum;
+    char criminalRecord[100], sex[6], BusType;
+    Date DoT;
+};
+
+bool seat_occupied[80];
+int Cchoice, bus_num, seat, searchChoice,number, reserved,seat_no,option, maxim_limit=80, size;
+char answer, y, n, SearchName[30], SearchPhone, SearchBusType, a;
+busInfo B;
+Traveler newTraveler[100];
+
+void Bus (busInfo B);
+void Trecord (Traveler T[]);
+bool Seat_check(int available);
+int reserve_seat();
+bool legality_checker (char );
+bool regular_checker ();
+void display (Traveler info);
+void Gticket ();
+void search ();
+
+
+
+int main(){
+    reenter:
+    	system ("cls");
+    	system("color B0"); 
+    	cout<< "\n\n\n\n" ;
+    cout<<setfill(' ')<<setw(66)<<"      |#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*|\n"<<endl;
+    cout<<setfill(' ')<<setw(66)<<"      |*#                                                                                    *#|\n"<<endl;
+	cout<<setfill(' ')<<setw(66)<<"      |*#                           Bus ticket reservation system                            *#|\n"<<endl;
+	cout<<setfill(' ')<<setw(74)<<"      |*#------------------------------------------------------------------------------------*#|\n"<<endl;
+	cout<<setfill(' ')<<setw(72)<<"      |*#                   press 1: To display bus information                              *#|\n"<<endl;
+	cout<<setfill(' ')<<setw(65)<<"      |*#                   press 2: To reserve seat                                         *#|\n"<<endl;
+	cout<<setfill(' ')<<setw(65)<<"      |*#                   press 3: To display details                                      *#|\n"<<endl;
+	cout<<setfill(' ')<<setw(53)<<"      |*#                   press 4: To search a specific Travel                             *#|\n"<<endl;
+	cout<<setfill(' ')<<setw(53)<<"      |*#                   press 5: To exit                                                 *#|\n"<<endl;
+	cout<<setfill(' ')<<setw(74)<<"      |*#------------------------------------------------------------------------------------*#|\n"<<endl;
+	cout<<setfill(' ')<<setw(74)<<"      |*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#*#|\n" <<endl;
+	cout<<setfill(' ')<<setw(74)<<"\t\tplease enter your choice: ";
+	cin>>Cchoice;
+	renum:
+    
+
+	switch(Cchoice)
+		{
+		    case 1:
+		    	Bus(B);
+               break;
+			case 2:
+				cout<<"\n"<<setfill(' ')<<setw(60)<<"Enter total number of Travelers : ";
+    			cin>>number;
+
+				if(number < 1 || number > 80)
+        		{
+            	cout<<"Invalid input: please enter again "<<endl;
+            	goto renum;
+        		}
+    			for (int i =1; i <= maxim_limit; i++){
+        		seat_occupied[i] = false;
+    			}
+                for( int i=1;i<=number;i++)
+                {
+                	Trecord (newTraveler);
+                    reserve_seat();
+                }
+			    break;
+            case 3:
+			    break;
+			case 4:
+				search();
+				break;
+			case 5:
+				exit(EXIT_FAILURE);
+				break;
+		}
+		
+    cout<<"\n\n------------------------------------------------------------------------"<<endl;
+    cout<<setfill(' ')<<setw(57)<<"do you want to continue? (enter Y for yes & N for no) "<<endl;
+    cout<<setfill(' ')<<setw(12)<<"Answer = ";
+    cin>>answer;
+
+		if(answer =='y' || answer=='Y')
+        {
+            goto reenter;
+        }
+		else if(answer =='n' || answer=='N')
+        {
+			cout<<setfill(' ')<<setw(48)<<"Thank you for choosing us come back next time"<<endl;
+		}
+    cout<<"\n------------------------------------------------------------------------"<<endl;
+
+    return 0;
+}
+//********************************************************************************************************
+//********************************************************************************************************
+void Bus (busInfo B){
+    char bustype[50];
+	system ("cls");
+	system("color 0B");
+	busInfo buses[5] = {{"INFERNO","Mikyas Solomon", "Blue", "12 A.M", "Addis Ababa", "Bahir Dar"},
+							{"SUCCESS", "Ermiyas Mulatu", "Black", "3 A.M", "Dire Dawa", "Addis Ababa"},
+							{"RIVER MOON", "Abel Tesfa", "Silver", "4 A.M", "Addis Ababa", "Hawassa"},
+							{"INFINITY", "Muluemebet Tarekegn", "Brown", "5 A.M", "Jimma", "Addis Ababa"},
+							{"ZEMECHA","Yishak Abreham","White", "1:30 A.M", "Arba Minch", "Adama"}};
+	cout<<setw(20)<<"\nBus Type"<<left<<"\t    "<<setw(25)<<"Driver Name"<<left<<setw(20)<<"Bus Color"<<left<<setw(20)<<"Departure Time"<<left<<setw(20)<<"From"<<left<<setw(20)<<"To"<<endl;
+	for (int i=0; i<5; i++)
+	{
+		cout<<endl;
+		cout<<setw(20)<<buses[i].busType<<left<<setw(25)<<buses[i].driverName<<left<<setw(20)<<buses[i].color<<left<<setw(20)<<buses[i].departureTime<<left<<setw(20)<<buses[i].From<<left<<setw(20)<<buses[i].To;
+		cout<<endl;
+	}
+	cout<<"\n\nPlease Choose your Bus Type from the given alternatives: "<<endl;
+    cin>>bustype;
+}
+//********************************************************************************************************
+//********************************************************************************************************
+void Trecord (Traveler T[]){
+	system ("cls");
+	system("color 0D");
+
+	Traveler newTraveler[number];
+	for (int i=0; i<number; i++)
+	{
+		cout<<"\nTraveler "<<i+1<<": ";
+		cout<<"\nEnter your Full name: ";
+		cin>>newTraveler[i].name;
+		cout<<"\nEnter your Gender: ";
+		cin>>newTraveler[i].sex;
+		cout<<"\nEnter your Age: ";
+		cin>>newTraveler[i].age;
+		cout<<"\nEnter your phone number: ";
+		cin>>newTraveler[i].phoneNum;
+		cout<<"\nEnter your Address (city): ";
+		cin>>newTraveler[i].TA.city;
+		cout<<"\nEnter your Address ( street number): ";
+		cin>>newTraveler[i].TA.streetNum;
+		cout<<"\nDo You Have A criminal record (insert 'y' for 'yes' or 'n' for 'No') : ";
+		cin>>newTraveler[i].criminalRecord;
+		if (legality_checker(a) == true)
+			{
+				cout<<"\nSorry, You can not use our buses;"<<endl;
+				exit(EXIT_FAILURE);
+			}
+		else if (legality_checker(a) == false)
+			{
+				cout<<"\nEnter your date of travel (date, month, year in Ethiopian Calander): ";
+				cin>>newTraveler[i].DoT.day>>newTraveler[i].DoT.month>>newTraveler[i].DoT.year;
+				cout<<"\nEnter your time of travel (please insert PM or AM with the time in local time): ";
+				cin>>newTraveler[i].DoT.time;
+				cout<<endl;
+			}
+
+	}
+}
+//********************************************************************************************************
+//********************************************************************************************************
+bool Seat_check(int available){
+
+    if (seat_occupied[available] == true){
+        return false;
+    }
+    return true;
+}
+//********************************************************************************************************
+//********************************************************************************************************
+int reserve_seat(){
+retry:
+    cout<<setfill(' ')<<setw(34)<<"please choose a seat number (from 1-80) :  ";
+    cin>>seat_no;
+    reserved = seat_no;
+
+    if (seat_no > 80) {
+        cout<<"\tInput out of range: please enter again  "<<endl;
+        goto retry;
+    }
+    else if(seat_occupied[seat_no] == true){
+        cout<<"\tYou have entered an occupied seat: please choose another seat: "<<endl;
+        goto retry;
+    }
+
+    for (int j=0;j<=30;j++){
+        if(seat_occupied[seat_no] == true){
+            cout<<"\tAll seats are reserved, would you like to take another Bus? "<<endl;
+            cout<<"\tIf yes please enter 1 otherwise please enter 2"<<endl;
+            cin.ignore();
+            cout<<"\t";
+            cin>>option;
+            if(option == '1')
+        		Bus(B);
+            else
+                cout<<"\tThank you for choosing us. Good bye. ";
+            }
+    }
+    seat_occupied[seat_no] = true;
+    return seat_no;
+}
+//********************************************************************************************************
+//********************************************************************************************************
+void search ()
+{
+	system("cls");
+	int *ptr;
+	ptr = &number;
+	cout<<"\n\n\n\n\n";
+	cout<<"Please choose the criteria you want to search for a traveler from the given options:"<<endl;
+	cout<<left<<setw(66)<<"1. Traveler Name: "<<endl;
+	cout<<setw(66)<<"2. Bus Type: "<<endl;
+	cout<<setw(66)<<"3. Traveler Phone Number: "<<endl;
+	cin>>searchChoice;
+	switch(searchChoice)
+		{
+			case 1:
+				cout<<"\nPlease Enter the Traveler's Name correctly: ";
+				cin.get(SearchName, 30);
+				for (int i=0; i<*ptr; i++)
+				{
+					if (SearchName == newTraveler[i].name)
+					cout<<newTraveler[i].sex<<"\n"<<newTraveler[i].age<<"\n"<<newTraveler[i].phoneNum<<"\n"<<newTraveler[i].DoT.day<<"/"<<newTraveler[i].DoT.month<<"/"<<newTraveler[i].DoT.year;
+				}
+				break;
+			case 2:
+				cout<<"\nPlease Enter the Bus type";
+				cin>>SearchBusType;
+				for (int i=0; i<*ptr; i++)
+				{
+					if (SearchBusType == newTraveler[i].BusType)
+					cout<<newTraveler[i].name<<"\n"<<newTraveler[i].age<<"\n"<<newTraveler[i].phoneNum<<"\n"<<newTraveler[i].DoT.day<<"/"<<newTraveler[i].DoT.month<<"/"<<newTraveler[i].DoT.year;
+				}
+				break;
+			case 3:
+				cout<<"\nPlease Enter the phone number";
+				cin>>SearchPhone;
+				for (int i=0; i<*ptr; i++)
+				{
+					if (SearchPhone == newTraveler[i].phoneNum)
+					cout<<newTraveler[i].name<<"\n"<<newTraveler[i].age<<"\n"<<newTraveler[i].sex<<"\n"<<newTraveler[i].DoT.day<<"/"<<newTraveler[i].DoT.month<<"/"<<newTraveler[i].DoT.year;
+				}
+				break;
+		}
+}
+bool legality_checker (char a)
+{
+	for (int i=0; i<number; i++)
+	{
+		if (newTraveler[i].criminalRecord == "y" || newTraveler[i].criminalRecord == "Y" ){
+        return true;
+        
+    	}
+    	else if (newTraveler[i].criminalRecord == "n" || newTraveler[i].criminalRecord == "N" )
+    	return false;
+	}
+}
+
+
+
